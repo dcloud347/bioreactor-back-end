@@ -23,7 +23,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-*91b!*%$9d=$7wpf)ozd4w^04=9=7xug2yn(8bp%wtd(wg6*j$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-PRODUCTION = 'bioreactor' in socket.gethostname()
+PRODUCTION = 'Bioreactor' in socket.gethostname()
 
 if PRODUCTION:
     DEBUG = False
