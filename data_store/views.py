@@ -5,6 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK
 from rest_framework.viewsets import GenericViewSet
+from rest_framework.exceptions import ValidationError
 from .models import DesiredValues, Record
 from .serializers import DesiredValuesSerializer, RecordSerializer
 
@@ -14,9 +15,18 @@ class DesiredValuesViewSet(GenericViewSet):
     serializer_class = DesiredValuesSerializer
     lookup_value_regex = r'\d+'
     permission_classes = [IsAuthenticated]
+    validation_range = {
+        'Temperature': (25, 35),
+        'PH Value': (3, 7),
+        'Stirring Speed': (500, 1500)
+    }
 
     @action(detail=True, methods=['post'])
     def set(self, request, *args, **kwargs):
+        request.data['desired_value'] = Decimal(request.data['desired_value'])
+        if request.data['desired_value'] < self.validation_range[request.data['name']][0] or \
+                request.data['desired_value'] > self.validation_range[request.data['name']][1]:
+            raise ValidationError('The desired value is out of Range!')
         serializer = DesiredValuesSerializer(instance=self.get_object(), data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
