@@ -20,6 +20,7 @@ class ChoiceField(serializers.ChoiceField):
 class RecordSerializer(serializers.ModelSerializer):
     name = ChoiceField(choices=nameChoices.choices)
     time = serializers.DateTimeField(format='%Y-%m-%d %H:%M:%S', required=False)
+    value = serializers.FloatField()
 
     class Meta:
         model = Record
